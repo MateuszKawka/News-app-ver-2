@@ -1,94 +1,86 @@
 <template>
 <transition name="slide" mode='out-in'>
   <div class='menu-container'>
-  <i class="fas fa-bars menu-button fa-lg" @click='menuBind'></i>
-  <nav class="menu" :class="{ 'menu--hide': menuShow}">
-    
-  
-  <ul class="menu-list">
-    <p class="menu-label">
-    Categories
-  </p>
-    <li v-for='(item, index) in categories' 
-    :key='index'
-    @click='categoryBind'
-    class='item'
-    >
-      <a :data-item="item.cat" class='item__link'>{{item.display}}</a>
-    </li>
-  </ul>
-  
-  <ul class="menu-list">
-    <p class="menu-label">
-    Countries
-  </p>
-    <li v-for='(item, index) in countries' 
-    :key='index'
-    class='item'
-    @click='countryBind'>
-      <a :data-item="item.short" class='item__link' >{{item.full}}</a>
-    </li>
-  </ul>
-</nav>
+    <i class="fas fa-bars menu-button fa-lg"
+      @click='menuBind' 
+      :class="{ 'fa-times': !menuShow}"></i>
+    <nav class="menu" 
+      :class="{ 'menu--hide': menuShow}">
+    <ul class="menu-list">
+      <p class="menu-label">Categories</p>
+      <li class='item'
+        v-for='(item, index) in categories' 
+        :key='index'
+        @click='categoryBind'>
+        <a class='item__link'
+          :data-item="item.cat">{{item.display}}</a>
+      </li>
+    </ul>
+    <ul class="menu-list">
+      <p class="menu-label">Countries</p>
+      <li class='item'
+        v-for='(item, index) in countries' 
+        :key='index'
+        @click='countryBind'>
+        <a class='item__link'
+          :data-item="item.short">{{item.full}}</a>
+      </li>
+    </ul>
+  </nav>
   </div>
 </transition>
 </template>
 
 <script>
-import {
-    store,categories,countries
-  }  from '@/store.js'
+import { store, categories, countries } from "@/store.js";
 
 export default {
-  name: 'Menu',
- components: {
-   
- },
- props: ['fetchNews'],
-  data () {
+  name: "Menu",
+  props: ["fetchNews"],
+  data() {
     return {
-      category: '',
-      country: '',
+      category: "",
+      country: "",
       categories: categories,
       countries: countries,
-      menuShow: false
-    }
+      menuShow: true
+    };
   },
- methods: {
-   categoryBind(el) {
-    this.category = el.target.dataset.item;
-    this.menuBind()
-    this.setCategory();
-    this.fetchNews();
-   },
-   countryBind(el) {
-    this.country = el.target.dataset.item;
-    this.menuBind()
-    this.setCountry();
-    this.fetchNews()
-   },
-   setCategory() {
-  store.commit('setCategory', this.category)
-   },
-   setCountry() {
-     store.commit('setCountry', this.country)
-   },
-   menuBind() {
-     this.menuShow = !this.menuShow
-   }
- }
-}
+  methods: {
+    categoryBind(el) {
+      this.category = el.target.dataset.item;
+      this.menuBind();
+      this.setCategory();
+      this.fetchNews();
+    },
+    countryBind(el) {
+      this.country = el.target.dataset.item;
+      this.menuBind();
+      this.setCountry();
+      this.fetchNews();
+    },  
+    setCategory() {
+      store.commit("setCategory", this.category);
+    },
+    setCountry() {
+      store.commit("setCountry", this.country);
+    },
+    menuBind() {
+      this.menuShow = !this.menuShow;
+    }
+  }
+};
 </script>
 
-<style>
-
-
+<style scoped>
 .menu-button {
   position: absolute;
   top: 19px;
   left: 12px;
-  font-size: 14px;
+  font-size: 18px;
   z-index: 3;
+  transition: 0.5s all ease-in-out;
+  cursor: pointer;
 }
 .menu-container {
   width: 100%;
@@ -110,13 +102,13 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  flex-flow: column wrap;
+  flex-flow: column;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 2;
   background: #fff;
-  transition: .25s all ease-in-out;
+  transition: 0.2s all ease-in-out;
 }
 
 .menu-list {
@@ -134,25 +126,24 @@ export default {
 
   width: 100%;
   text-align: left;
-  padding: .5rem;
 
   cursor: pointer;
-  transition: .2s all ease-in-out
+  transition: 0.2s all ease-in-out;
 }
 
-.item:hover{
+.item:hover {
   background: #f2f2f2;
 }
 
 .item__link {
-
+  display: flex;
+  height: 100%;
+  padding: 0.5rem;
 }
 
 .menu--hide {
- visibility: hidden;
+  visibility: hidden;
 
- transform: translateY(-100%)
+  transform: scale(0);
 }
 </style>
-
-

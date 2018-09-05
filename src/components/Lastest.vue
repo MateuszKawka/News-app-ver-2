@@ -1,34 +1,23 @@
 <template>
-  <section class='section slider'>    
-    <carousel  :perPage='1' paginationColor = "#A39B8B" paginationActiveColor="#07020D" :autoplay='true'>
-  <slide>
-      <div class='slider-item'>
-          <div class="gradient"></div>
-          <img src='http://pcmod.pl/wp-content/uploads/2016/04/enter-the-dungeon-logo.jpg'>
-          <p class='slider-item__content'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vitae, excepturi officiis dolores animi sit quis quidem recusandae autem veniam quaerat ut reiciendis magnam, odio cumque voluptatum quo architecto, inventore magni?</p>
-      </div>
-  </slide>
-  <slide>
-  <div class='slider-item'>
-          <div class="gradient"></div>
-          <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/City_of_London_skyline_from_London_City_Hall_-_Sept_2015_-_Crop_Aligned.jpg/1200px-City_of_London_skyline_from_London_City_Hall_-_Sept_2015_-_Crop_Aligned.jpg'>
-          <p class='slider-item__content'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vitae, excepturi officiis </p>
-      </div>
-  
-  </slide>
-  <slide>
+  <section class='slider'>    
+    <carousel  
+        :perPage='1'
+        paginationColor = "#f2f2f2"
+        paginationActiveColor="#07020D"
+        :autoplay='true'
+        :autoplayTimeout='7000'>
+    <slide 
+    v-for='(item, index) in lastestNews' 
+     :key='index'>
+    <a :href='item.url' target='_blank'>
     <div class='slider-item'>
-          <div class="gradient"></div>
-          <img src='https://manwinwin.com/wp-content/uploads/2016/11/breaking-news-.jpg'>
-          <p class='slider-item__content'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vitae, excepturi officiis dolores animi sit quis quidem recusandae autem veniam quaerat ut reiciendis magnam, odio cumque voluptatum quo architecto, inventore magni?</p>
-      </div>
-  </slide>
-  <slide>
-    <div class='slider-item'>
-          <div class="gradient"></div>
-          <img src='https://media3.s-nbcnews.com/i/newscms/2017_28/2067216/170710-money-jar-mn-1355_b73bfd0f28cbfa8b23de3111d07d37da.JPG'>
-          <p class='slider-item__content'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vitae, excepturi officiis dolores animi sit quis quidem recusandae autem veniam quaerat ut reiciendis magnam, odio cumque voluptatum quo architecto, inventore magni?</p>
-      </div>
+        <div class="gradient"></div>
+        <img 
+            v-lazy='imageSrc[index]'
+            alt='no info'>
+        <p class='slider-item__content'>{{item.title}}</p>
+    </div>
+    </a>
   </slide>
 </carousel>
   </section>
@@ -36,47 +25,123 @@
 
 <script>
 import News from "@/components/News.vue";
+import { store } from "@/store.js";
 
 export default {
   name: "Lastest",
   components: {
     News
+  },
+  data(){
+    return {
+      lastestNews: Array
+    }
+  },
+  computed: {
+    imageSrc() {
+      return this.lastestNews.map(function(item) {
+        let imageUrl = item.urlToImage;
+        let placeholder =
+          "https://images.vexels.com/media/users/3/144609/raw/26930bcc86d4e5962ffe712cae931fc8-world-breaking-news-banner-header.jpg";
+        return imageUrl === null ? placeholder : imageUrl;
+      });
+    }
+  },
+  methods: {
+    getNews() {
+      fetch(
+        `https://newsapi.org/v2/top-headlines?pagesize=5&country=us&apiKey=c70c6b881578467e8d65672d0783c383`
+      )
+        .then(resp => {
+          return resp.json();
+        })
+        .then(resp => {
+          this.lastestNews = resp.articles
+        });
+    }
+  },
+  mounted() {
+    this.getNews()
   }
 };
 </script>
 
-<style>
+<style scoped>
 .slider {
-    width: 100%;
-    height: 316px;
-    margin-top: 4rem;
+  width: 100%;
+  margin-top: 6rem;
 }
 
 .slider-item {
-    position: relative;
+  position: relative;
+  height: 212px;
+  cursor: pointer;
 }
 
 .slider-item__content {
-    position: absolute;
-    bottom: 12px;
-    width: 100%;
-    padding: 1rem 3rem;
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #fff;
+  position: absolute;
+  bottom: 12px;
+  width: 100%;
+  padding: 1rem 3rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
 }
 
 .slider-item img {
-    width: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .gradient {
-    width: 100%;
-    height: 100%;
-    background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(131,131,131,0) 61%, rgba(55,55,55,1) 98%, rgba(51,51,51,1) 100%);
-background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(131,131,131,0) 61%,rgba(55,55,55,1) 98%,rgba(51,51,51,1) 100%);
-background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(131,131,131,0) 61%,rgba(55,55,55,1) 98%,rgba(51,51,51,1) 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#333333',GradientType=0 );
-    position: absolute
+  width: 100%;
+  height: 100%;
+  background: -moz-linear-gradient(
+    top,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+  background: -webkit-linear-gradient(
+    top,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#a6000000',GradientType=0 );
+  position: absolute;
+}
+
+
+@media only screen and (min-width: 420px) {
+    .slider-item {
+        height: 25vh;
+    }
+    .slider-item__content {
+      font-size: 2rem;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    .slider-item {
+        height: 40vh;
+    }
+
+    .slider-item__content {
+      font-size: 2.4rem;
+    }
+}
+
+@media only screen and (min-width: 1000px) {
+.slider-item {
+        height: 95vh;
+    }
+    .slider-item__content {
+      font-size: 3.5rem;
+      bottom: 32px;
+    }
 }
 </style>
