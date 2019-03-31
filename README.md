@@ -1,6 +1,21 @@
-# newsver2
+# News aggregator 
 
-> A Vue.js project
+> News aggregator powered by [News api](https://newsapi.org/).
+
+> Features:
+
+  * Allows you search article by key word
+
+  * It has 8 categories and 7 countries for pick
+
+  * Actual news from [News api](https://newsapi.org/)
+
+> Supported by [VueJS](https://vuejs.org/)
+
+## Project Screen Shot(s)
+
+<img src="https://github.com/MateuszKawka/News-app-ver-2/blob/master/readme/newsapp.png" alt="Main screen"
+	title="Main screen" width="240" />
 
 ## Build Setup
 
@@ -17,5 +32,3 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
